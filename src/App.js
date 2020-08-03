@@ -9,7 +9,8 @@ export default class App extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            tasks : []
+            tasks : [],
+            isDisplayForm: false
         }
     }
 
@@ -47,8 +48,22 @@ export default class App extends Component{
         console.log(tasks);
     }
 
+    onToggleForm = () => {
+        this.setState({
+            isDisplayForm : !this.state.isDisplayForm
+        })
+
+    }
+
+    onCloseForm = () => {
+        this.setState({
+            isDisplayForm : false
+        })
+    }
+
     render() {
-        var { tasks } = this.state;
+        var { tasks, isDisplayForm } = this.state;
+        var elementTaskForm = isDisplayForm ? <TaskForm onCloseForm={this.onCloseForm}/> : '';
         return (
             <div className="container">
                 <div className="text-center">
@@ -56,9 +71,9 @@ export default class App extends Component{
                     <hr/>
                 </div>
                 <div className="row">
-                    <TaskForm />
+                    {elementTaskForm}
                     <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                        <button type="button" className="btn btn-primary">
+                        <button type="button" onClick={ this.onToggleForm } className="btn btn-primary">
                             <span className="fa fa-plus mr-5"></span>Thêm Công Việc
                         </button>
                         <button type="button" className="btn btn-success" onClick={ this.onGenerateData }>
