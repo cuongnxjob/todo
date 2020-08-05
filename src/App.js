@@ -10,7 +10,7 @@ export default class App extends Component{
         super(props);
         this.state = {
             tasks : [],
-            isDisplayForm: false
+            isDisplayForm: true
         }
     }
 
@@ -61,9 +61,21 @@ export default class App extends Component{
         })
     }
 
+    onSubmit = (data) => {
+        var {tasks} = this.state;
+        data.id = uuidv4();
+        tasks.push(data);
+        this.setState({
+            tasks: tasks
+        })
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
     render() {
         var { tasks, isDisplayForm } = this.state;
-        var elementTaskForm = isDisplayForm ? <TaskForm onCloseForm={this.onCloseForm}/> : '';
+        var elementTaskForm = isDisplayForm
+            ? <TaskForm onSubmit={this.onSubmit} onCloseForm={this.onCloseForm}/>
+            : '';
         return (
             <div className="container">
                 <div className="text-center">
