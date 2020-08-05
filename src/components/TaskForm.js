@@ -30,6 +30,16 @@ export default class TaskForm extends Component{
     onSubmit = (event) => {
         event.preventDefault();
         this.props.onSubmit(this.state);
+        // cancel & close form
+        this.onClear();
+        this.onCloseForm();
+    }
+
+    onClear = (event) => {
+        this.setState({
+            name: '',
+            status: false
+        })
     }
 
     render() {
@@ -66,7 +76,7 @@ export default class TaskForm extends Component{
                             <div className="text-center">
                                 <button type="submit" onClick={this.onSubmit} className="btn btn-warning">Thêm</button>
                                 &nbsp;
-                                <button type="button" className="btn btn-danger">Hủy Bỏ</button>
+                                <button type="button" onClick={this.onClear} className="btn btn-danger">Hủy Bỏ</button>
                             </div>
                         </form>
                     </div>
