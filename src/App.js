@@ -10,7 +10,8 @@ export default class App extends Component{
         super(props);
         this.state = {
             tasks : [],
-            isDisplayForm: true
+            isDisplayForm: true,
+            taskEditing: null
         }
     }
 
@@ -61,12 +62,26 @@ export default class App extends Component{
         })
     }
 
+    onShowForm = () => {
+        this.setState({
+            isDisplayForm : true
+        })
+    }
+
+
     onSubmit = (data) => {
         var {tasks} = this.state;
-        data.id = uuidv4();
-        tasks.push(data);
+        if(data.id == '') {
+            data.id = uuidv4();
+            tasks.push(data);
+        } else {
+            var index = this.findIndex(data.id);
+            tasks[index] = data;
+        }
+
         this.setState({
-            tasks: tasks
+            tasks: tasks,
+            taskEditing: null
         })
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
@@ -94,10 +109,35 @@ export default class App extends Component{
         return result;
     }
 
+    onDelete = (id) => {
+        var {tasks} = this.state;
+        var index = this.findIndex(id);
+        if(index != -1) {
+            tasks.splice(index,1);
+            this.setState({
+                tasks: tasks
+            })
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        this.onCloseForm();
+    }
+
+    onUpdate = (id) => {
+        var {tasks} = this.state;
+        var index = this.findIndex(id);
+        var taskEditing = tasks[index];
+        this.setState({
+            taskEditing: taskEditing
+        })
+        this.onShowForm();
+    }
+
+
+
     render() {
-        var { tasks, isDisplayForm } = this.state;
+        var { tasks, isDisplayForm, taskEditing } = this.state;
         var elementTaskForm = isDisplayForm
-            ? <TaskForm onSubmit={this.onSubmit} onCloseForm={this.onCloseForm}/>
+            ? <TaskForm onSubmit={this.onSubmit} onCloseForm={this.onCloseForm} task={taskEditing}/>
             : '';
         return (
             <div className="container">
@@ -115,7 +155,7 @@ export default class App extends Component{
                             <span className="fa fa-plus mr-5"></span>Generate Date
                         </button>
                         <Control />
-                        <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus}/>
+                        <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete} onUpdate={this.onUpdate}/>
                     </div>
                 </div>
             </div>

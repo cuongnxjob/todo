@@ -5,11 +5,21 @@ export default class TaskForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             name: '',
             status: false
         }
     }
 
+    componentWillMount() {
+        if (this.props.task) {
+            this.setState({
+                id: this.props.task.id,
+                name: this.props.task.name,
+                status: this.props.task.status,
+            })
+        }
+    }
 
     onCloseForm = () => {
         this.props.onCloseForm();
@@ -43,11 +53,12 @@ export default class TaskForm extends Component{
     }
 
     render() {
+        var {id} = this.state;
         return(
             <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <div className="panel panel-warning">
                     <div className="panel-heading">
-                        <h3 className="panel-title">Thêm Công Việc</h3>
+                        <h3 className="panel-title"> {id != '' ? 'Cap nhat cong viec' : 'Them cong viec'} </h3>
                         <span onClick={this.onCloseForm} className="fa fa-times-circle text-right"></span>
                     </div>
                     <div className="panel-body">
